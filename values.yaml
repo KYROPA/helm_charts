@@ -1,0 +1,25 @@
+nginx:
+  replicas: 3
+  image: nginx:stable
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: null
+
+dashboard:
+  namespace: kubernetes-dashboard
+  readonly:
+    enabled: true
+    serviceAccountName: dashboard-viewer
+  admin:
+    enabled: false
+    serviceAccountName: admin-user
+
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules: []
+
