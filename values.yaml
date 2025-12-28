@@ -23,3 +23,6 @@ httpRoute:
   hostnames: []
   rules: []
 
+customPage:
+  enabled: false
+  url: "https://raw.githubusercontent.com/KYROPA/helm_charts/main/custom-page/index.html"

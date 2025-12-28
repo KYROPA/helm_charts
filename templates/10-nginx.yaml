@@ -17,24 +17,42 @@ spec:
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
+          whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
               app: nginx
+
+      {{- if .Values.customPage.enabled }}
+      initContainers:
+        - name: fetch-custom-page
+          image: curlimages/curl:8.5.0
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              set -eu
+              echo "Downloading custom index.html..."
+              curl -fsSL "{{ .Values.customPage.url }}" -o /work/index.html
+              echo "Downloaded:"
+              ls -l /work/index.html
+          volumeMounts:
+            - name: webroot
+              mountPath: /work
+      {{- end }}
+
       containers:
         - name: nginx
           image: nginx:stable
           ports:
             - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-svc
-spec:
-  selector:
-    app: nginx
-  ports:
-    - port: 80
-      targetPort: 80
-  type: NodePort
+
+          {{- if .Values.customPage.enabled }}
+          volumeMounts:
+            - name: webroot
+              mountPath: /usr/share/nginx/html
+          {{- end }}
+
+      {{- if .Values.customPage.enabled }}
+      volumes:
+        - name: webroot
+          emptyDir: {}
+      {{- end }}
