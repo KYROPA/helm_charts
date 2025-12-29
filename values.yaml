@@ -25,4 +25,4 @@ httpRoute:
 
 customPage:
   enabled: false
-  url: "https://raw.githubusercontent.com/KYROPA/helm_charts/main/custom-page/index.html"
+  url: "https://raw.githubusercontent.com/KYROPA/helm_charts/main/index.html"
